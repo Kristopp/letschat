@@ -6,7 +6,7 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core";
 const customTheme = createMuiTheme({
   palette: {
     primary: {
-      main: "#F5BD1F",
+      main: "#ff8f00",
       contrastText: "#6a0dad ",
     },
   },
@@ -16,7 +16,8 @@ function Loading() {
   return (
     <ThemeProvider theme={customTheme}>
       <Center>
-        <Loadingbar color="primary"></Loadingbar>
+        <Loadingbar color="primary" style={{ height: "10px" }}></Loadingbar>
+        <LoadingText>loading</LoadingText>
       </Center>
     </ThemeProvider>
   );
@@ -25,6 +26,8 @@ function Loading() {
 export default Loading;
 
 const Center = styled.div`
+  display: grid;
+  place-items: center;
   width: 100%;
   height: 100%;
 `;
@@ -33,3 +36,5 @@ const Loadingbar = styled(LinearProgress)`
   width: 100%;
   margin-top: 0.2px;
 `;
+
+const LoadingText = styled.h1``;

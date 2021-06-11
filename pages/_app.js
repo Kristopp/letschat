@@ -7,7 +7,7 @@ import Loading from "../components/Loading"
 function MyApp({ Component, pageProps }) {
   const [user, loading] = useAuthState(auth);
   //Check user from on root
-  if (true) return <Loading />; //Force the lodaing state
+  if (loading) return <Loading />; //Force the loading state until Auth complited
   if (!user) return <Login />;
 
   //if no user return to "Login page"
