@@ -1,5 +1,4 @@
 import "../styles/globals.css";
-import { ServerStyleSheet } from 'styled-components';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase";
 import Login from "./login";

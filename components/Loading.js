@@ -1,16 +1,24 @@
 import React from "react";
 import styled from "styled-components";
 import LinearProgress from "@material-ui/core/LinearProgress";
-import red from '@material-ui/core/colors/red';
+import { ThemeProvider, createMuiTheme } from "@material-ui/core";
 
+const customTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#F5BD1F",
+      contrastText: "#6a0dad ",
+    },
+  },
+});
 
-function Loading(theme) {
-
-  const primary = red[500]; 
+function Loading() {
   return (
-    <Center>
-      <Loadingbar color={primary}></Loadingbar>
-    </Center>
+    <ThemeProvider theme={customTheme}>
+      <Center>
+        <Loadingbar color="primary"></Loadingbar>
+      </Center>
+    </ThemeProvider>
   );
 }
 
