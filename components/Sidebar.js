@@ -19,7 +19,7 @@ function Sidebar() {
     const input = prompt("Please enter user email u wish to chat with");
     if (!input) return null;
     //we need to see if email is valid and if chat all rdy exists
-    if (EmailValidator.validate(input) && !chatAllreadyExists(inpt) && input !== user.email) {
+    if (EmailValidator.validate(input) && !chatAllreadyExists(input) && input !== user.email) {
       //and if is we add this chat into 'chat' db collection
       db.collection("chats").add({
         users: [user.email, input],
