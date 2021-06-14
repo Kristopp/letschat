@@ -5,30 +5,34 @@ import MoreVerticalIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
 import * as EmailValidator from "email-validator";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollection } from "react-firebase-hooks/firestore"
+import { useCollection } from "react-firebase-hooks/firestore";
 import { auth, db } from "../firebase";
 
 function Sidebar() {
   const [user] = useAuthState(auth);
-  const userChatRef = db.collection('chats').where('users', 'array-contains', user.email); //firebase-hooks for firebase db ref
+  const userChatRef = db
+    .collection("chats")
+    .where("users", "array-contains", user.email); //firebase-hooks for firebase db ref
   const [chatsSnapshot] = useCollection(userChatRef);
 
   const createChat = () => {
     const input = prompt("Please enter user email u wish to chat with");
     if (!input) return null;
-    //we need to see if email is valid
-    if (EmailValidator.validate(input) && input !== user.email) {
+    //we need to see if email is valid and if chat all rdy exists
+    if (EmailValidator.validate(input) && !chatAllreadyExists(inpt) && input !== user.email) {
       //and if is we add this chat into 'chat' db collection
       db.collection("chats").add({
         users: [user.email, input],
       }); // create new chat collection into DB
     }
     //check if chat is open all rdy
-    const chatOpen = (recipientEmail) => {
-      //We need to see if chat is all rdy open for that we need refrence 
-
-    }
-
+    const chatAllreadyExists = (recipientEmail) => {
+      //We need to see if chat is all rdy open for that we need refrence
+      !!chatsSnapshot.docs.find( // it chekcs if the user i try to create chat with is all rdy exists
+        (chat) =>
+          chat.data().users.find((user) => user === recipientEmail)?.length > 0 //returns boolean
+      );
+    };
   };
 
   return (
