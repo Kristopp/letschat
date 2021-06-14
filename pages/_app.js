@@ -9,7 +9,6 @@ function MyApp({ Component, pageProps }) {
   const [user, loading] = useAuthState(auth);
 
   useEffect(() => {
-    console.log(user)
     if (user) {
       db.collection("users").doc(user.uid).set(
         {
