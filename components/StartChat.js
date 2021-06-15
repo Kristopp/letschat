@@ -1,4 +1,6 @@
 import React from "react";
+import * as EmailValidator from "email-validator";
+import { db } from "../firebase";
 
 function StartChat({ input }) {
 

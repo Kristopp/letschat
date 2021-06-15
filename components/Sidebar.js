@@ -6,7 +6,6 @@ import MoreVerticalIcon from "@material-ui/icons/MoreVert";
 import SearchIcon from "@material-ui/icons/Search";
 import Chat from "./Chat";
 import StartChat from "./StartChat";
-import * as EmailValidator from "email-validator";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { auth, db } from "../firebase";
@@ -18,7 +17,7 @@ function Sidebar() {
     .collection("chats")
     .where("users", "array-contains", user.email); //firebase-hooks for firebase db ref
   const [chatsSnapshot] = useCollection(userChatRef);
- 
+
   return (
     <div>
       <Container>
@@ -36,8 +35,14 @@ function Sidebar() {
           <SearchIcon />
           <SearchInput></SearchInput>
         </Search>
-        <StartChatButton onClick={() =>{ setOpenPrompt(!toggleModal)}}>Start chat</StartChatButton>
-        {openPrompt ? <StartChat input={input} /> : null}
+        <StartChatButton
+          onClick={() => {
+            setOpenPrompt(!openPrompt);
+          }}
+        >
+          Start chat
+        </StartChatButton>
+        {openPrompt ? <StartChat /> : null}
         {/* List of users */}
         {chatsSnapshot?.docs.map((chat) => (
           <Chat key={chat.id} id={chat.id} user={chat.data().users} />
