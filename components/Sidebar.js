@@ -35,6 +35,7 @@ function Sidebar() {
           <SearchIcon />
           <SearchInput></SearchInput>
         </Search>
+        {openPrompt ? <StartChat /> : null}
         <StartChatButton
           onClick={() => {
             setOpenPrompt(!openPrompt);
@@ -42,7 +43,6 @@ function Sidebar() {
         >
           Start chat
         </StartChatButton>
-        {openPrompt ? <StartChat /> : null}
         {/* List of users */}
         {chatsSnapshot?.docs.map((chat) => (
           <Chat key={chat.id} id={chat.id} user={chat.data().users} />
@@ -54,7 +54,9 @@ function Sidebar() {
 
 export default Sidebar;
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: grid;
+`;
 
 const Search = styled.div`
   display: flex;
@@ -89,8 +91,6 @@ const Header = styled.div`
 
 const UserAvatar = styled(Avatar)`
   //We import Avatar component from materialUi
-  margiimport StartChat from './StartChat';
-n: 10px;
   :hover {
     opacity: 0.8;
   }
