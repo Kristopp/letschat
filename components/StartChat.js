@@ -97,4 +97,6 @@ const AcceptPropmt = styled(CheckIcon)``;
 
 const IconContainer = styled.div`
 display: flex;
+width: 40%;
+justify-content: space-between;
 `;
