@@ -1,7 +1,8 @@
 import React from "react";
 import * as EmailValidator from "email-validator";
 import { makeStyles } from "@material-ui/core/styles";
-import { Input } from "@material-ui/core";
+import { Input, ThemeProvider } from "@material-ui/core";
+import { mainCustomTheme } from "../styles/muiThemes"
 import { db } from "../firebase";
 import styled from "styled-components";
 import FormControl from "@material-ui/core/FormControl";
@@ -12,6 +13,12 @@ import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 
 const useStyles = makeStyles((theme) => ({
+  palette: {
+    primary: {
+      main: "F5882F",
+      contrastText: "#6a0dad ",
+    },
+  },
   margin: {
     margin: theme.spacing(1),
   },
@@ -50,23 +57,26 @@ function StartChat({ input }) {
 
   return (
     <Container>
-      <FormControl className={classes.margin}>
-        <InputLabel htmlFor="input-with-icon-adornment">
-          Enter user email to start chat
-        </InputLabel>
-        <PropmtInput
-          id="input-with-icon-adornment"
-          startAdornment={
-            <InputAdornment position="start">
-              <AccountCircle />
-            </InputAdornment>
-          }
-        />
-      </FormControl>
-      <IconContainer>
-        <AcceptPropmt />
-        <ClosePropmt />
-      </IconContainer>
+      <ThemeProvider theme={mainCustomTheme}>
+        <FormControl className={classes.margin}>
+          <InputLabel htmlFor="input-with-icon-adornment" color="pirmary">
+            Enter user email to start chat
+          </InputLabel>
+          <PropmtInput
+            id="input-with-icon-adornment"
+            color="primary"
+            startAdornment={
+              <InputAdornment position="start">
+                <AccountCircle />
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <IconContainer>
+          <AcceptPropmt />
+          <ClosePropmt />
+        </IconContainer>
+      </ThemeProvider>
     </Container>
   );
 }
@@ -77,6 +87,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  align-self: center;
+  justify-self: center;
   height: 110px;
   width: 18%;
   cursor: pointer;
@@ -96,7 +108,7 @@ const ClosePropmt = styled(ClearIcon)``;
 const AcceptPropmt = styled(CheckIcon)``;
 
 const IconContainer = styled.div`
-display: flex;
-width: 40%;
-justify-content: space-between;
+  display: flex;
+  width: 40%;
+  justify-content: space-between;
 `;
