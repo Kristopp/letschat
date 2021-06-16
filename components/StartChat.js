@@ -3,7 +3,7 @@ import * as EmailValidator from "email-validator";
 import { makeStyles } from "@material-ui/core/styles";
 import { Input, ThemeProvider } from "@material-ui/core";
 import { mainCustomTheme } from "../styles/muiThemes";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
 import styled from "styled-components";
 import FormControl from "@material-ui/core/FormControl";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -11,6 +11,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 const useStyles = makeStyles((theme) => ({
   palette: {
@@ -25,13 +27,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function StartChat(props) {
+  const [chatsSnapshot] = useCollection(userChatRef);
   const [inputValue, setInputValue] = useState("");
+  const [user] = useAuthState(auth);
+  const userChatRef = db
+    .collection("chats")
+    .where("users", "array-contains", user.email);
   const classes = useStyles();
-  console.log(props.onChange);
+
   const createChat = () => {
     console.log("called");
+    console.log(inputValue);
     /*  const input = prompt("Please enter user email u wish to chat with"); */
-    if (!inputValue) return null;
+    if (!inputValue) return alert("Please enter proper email");
     //we need to see if email is valid and if chat all rdy exists
     if (
       EmailValidator.validate(inputValue) &&
@@ -70,14 +78,18 @@ function StartChat(props) {
                 <AccountCircle />
               </InputAdornment>
             }
-            onChange={() => setInputValue}
+            type="email"
+            value={inputValue}
+            onChange={(event) => setInputValue(event.target.value)}
           />
         </FormControl>
         <IconContainer>
-          <AcceptPropmt onClick={() => createChat} />
+          <Button onClick={createChat}>
+            <AcceptPropmt />
+          </Button>
           <Button
             onClick={() => {
-              props.onChange();
+              props.onChange(); //I user onChange function to change state from parrent component
             }}
           >
             <ClosePropmt />
@@ -96,10 +108,11 @@ const Container = styled.div`
   align-items: center;
   align-self: center;
   justify-self: center;
-  height: 110px;
-  width: 18%;
+  height: 100px;
+  margin: 10px;
+  width: 350px;
   cursor: pointer;
-  padding: 15px;
+  padding: 5px;
   word-break: break-word;
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
@@ -110,7 +123,10 @@ const PropmtInput = styled(Input)`
   width: 100%;
 `;
 
-const Button = styled.button``;
+const Button = styled.button`
+  border: none;
+  background-color: transparent;
+`;
 
 const ClosePropmt = styled(ClearIcon)``;
 
