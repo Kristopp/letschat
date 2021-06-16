@@ -27,19 +27,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function StartChat(props) {
-  const [chatsSnapshot] = useCollection(userChatRef);
-  const [inputValue, setInputValue] = useState("");
   const [user] = useAuthState(auth);
   const userChatRef = db
     .collection("chats")
-    .where("users", "array-contains", user.email);
+    .where("users", "array-contains", user.email); //firebase-hooks for firebase db ref
+  const [chatsSnapshot] = useCollection(userChatRef);
+  const [inputValue, setInputValue] = useState("");
   const classes = useStyles();
 
   const createChat = () => {
-    console.log("called");
-    console.log(inputValue);
-    /*  const input = prompt("Please enter user email u wish to chat with"); */
-    if (!inputValue) return alert("Please enter proper email");
+    if (!inputValue) return null;
     //we need to see if email is valid and if chat all rdy exists
     if (
       EmailValidator.validate(inputValue) &&
@@ -51,18 +48,17 @@ function StartChat(props) {
         users: [user.email, inputValue],
       }); // create new chat collection into DB
     }
-    //check if chat is open all rdy
-    const chatAllreadyExists = (recipientEmail) => {
-      //We need to see if chat is all rdy open for that we need refrence
-      console.log(chatsSnapshot.docs);
-      !!chatsSnapshot.docs.find(
-        // it chekcs if the user i try to create chat with is all rdy exists
-        (chat) =>
-          chat.data().users.find((user) => user === recipientEmail)?.length > 0 //returns boolean
-      );
-    };
+    props.onChange();
   };
 
+  const chatAllreadyExists = (recipientEmail) => {
+    //We need to see if chat is all rdy open for that we need refrence
+    !!chatsSnapshot.docs.find(
+      // it chekcs if the user i try to create chat with is all rdy exists
+      (chat) =>
+        chat.data().users.find((user) => user === recipientEmail)?.length > 0 //returns boolean
+    );
+  };
   return (
     <Container>
       <ThemeProvider theme={mainCustomTheme}>
@@ -126,6 +122,7 @@ const PropmtInput = styled(Input)`
 const Button = styled.button`
   border: none;
   background-color: transparent;
+  cursor: pointer;
 `;
 
 const ClosePropmt = styled(ClearIcon)``;
