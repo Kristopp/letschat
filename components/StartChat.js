@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import * as EmailValidator from "email-validator";
 import { makeStyles } from "@material-ui/core/styles";
 import { Input, ThemeProvider } from "@material-ui/core";
-import { mainCustomTheme } from "../styles/muiThemes"
+import { mainCustomTheme } from "../styles/muiThemes";
 import { db } from "../firebase";
 import styled from "styled-components";
 import FormControl from "@material-ui/core/FormControl";
@@ -24,23 +24,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function StartChat({ input }) {
+function StartChat(props) {
+  const [inputValue, setInputValue] = useState("");
   const classes = useStyles();
-
+  console.log(props.onChange);
   const createChat = () => {
-    setOpenPrompt(!openPrompt);
-    let input = "";
+    console.log("called");
     /*  const input = prompt("Please enter user email u wish to chat with"); */
-    if (!input) return null;
+    if (!inputValue) return null;
     //we need to see if email is valid and if chat all rdy exists
     if (
-      EmailValidator.validate(input) &&
-      !chatAllreadyExists(input) &&
-      input !== user.email
+      EmailValidator.validate(inputValue) &&
+      !chatAllreadyExists(inputValue) &&
+      inputValue !== user.email
     ) {
       //and if is we add this chat into 'chat' db collection
       db.collection("chats").add({
-        users: [user.email, input],
+        users: [user.email, inputValue],
       }); // create new chat collection into DB
     }
     //check if chat is open all rdy
@@ -59,7 +59,7 @@ function StartChat({ input }) {
     <Container>
       <ThemeProvider theme={mainCustomTheme}>
         <FormControl className={classes.margin}>
-          <InputLabel htmlFor="input-with-icon-adornment" color="pirmary">
+          <InputLabel htmlFor="input-with-icon-adornment" color="primary">
             Enter user email to start chat
           </InputLabel>
           <PropmtInput
@@ -70,11 +70,18 @@ function StartChat({ input }) {
                 <AccountCircle />
               </InputAdornment>
             }
+            onChange={() => setInputValue}
           />
         </FormControl>
         <IconContainer>
-          <AcceptPropmt />
-          <ClosePropmt />
+          <AcceptPropmt onClick={() => createChat} />
+          <Button
+            onClick={() => {
+              props.onChange();
+            }}
+          >
+            <ClosePropmt />
+          </Button>
         </IconContainer>
       </ThemeProvider>
     </Container>
@@ -102,6 +109,8 @@ const Container = styled.div`
 const PropmtInput = styled(Input)`
   width: 100%;
 `;
+
+const Button = styled.button``;
 
 const ClosePropmt = styled(ClearIcon)``;
 

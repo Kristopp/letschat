@@ -35,7 +35,9 @@ function Sidebar() {
           <SearchIcon />
           <SearchInput></SearchInput>
         </Search>
-        {openPrompt ? <StartChat /> : null}
+        {openPrompt ? (
+          <StartChat onChange={(value) => setOpenPrompt(value)} />
+        ) : null}
         <StartChatButton
           onClick={() => {
             setOpenPrompt(!openPrompt);
