@@ -22,7 +22,7 @@ function Sidebar() {
     <div>
       <Container>
         <Header>
-          <UserAvatar />
+          <UserAvatar src={user.photoURL} />
           <IconsContainer>
             <IconButton>
               <Chaticon />
@@ -47,7 +47,7 @@ function Sidebar() {
         </StartChatButton>
         {/* List of users */}
         {chatsSnapshot?.docs.map((chat) => (
-          <Chat key={chat.id} id={chat.id} user={chat.data().users} />
+          <Chat key={chat.id} id={chat.id} users={chat.data().users} />
         ))}
       </Container>
     </div>

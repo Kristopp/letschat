@@ -1,4 +1,6 @@
 //Filter to only get array back with user
-const getRecipentEmail = (users, userLoggedIn) => { 
-    users?.filter(userToFilter => userToFilter !== userLoggedIn?.email)[0]
-}
+//becouse
+const getRecipentEmail = (users, userLoggedIn) =>
+  users?.filter((userToFilter) => userToFilter !== userLoggedIn?.email)[0];
+
+export default getRecipentEmail;
