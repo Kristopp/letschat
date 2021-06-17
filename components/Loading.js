@@ -2,19 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core";
+import { mainCustomTheme } from "../styles/muiThemes"
 
-const customTheme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#ff8f00",
-      contrastText: "#6a0dad ",
-    },
-  },
-});
 
 function Loading() {
   return (
-    <ThemeProvider theme={customTheme}>
+    <ThemeProvider theme={mainCustomTheme}>
       <Center>
         <Loadingbar color="primary" style={{ height: "10px" }}></Loadingbar>
         <LoadingText>loading</LoadingText>

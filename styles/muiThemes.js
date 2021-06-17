@@ -1,10 +1,10 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
-const theme = createMuiTheme({
+export const theme = createMuiTheme({
   palette: {
     primary: {
       // light: will be calculated from palette.primary.main,
-      main: '#ff4400',
+      main: "#F5882F",
       // dark: will be calculated from palette.primary.main,
       // contrastText: will be calculated to contrast with palette.primary.main
     },
@@ -23,3 +23,17 @@ const theme = createMuiTheme({
     tonalOffset: 0.2,
   },
 });
+
+const mainCustomTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#F5882F",
+      contrastText: "#6a0dad ",
+    },
+    secondary: { 
+      main: '#303030'
+    }
+  },
+});
+
+export { mainCustomTheme }
