@@ -1,4 +1,4 @@
-import useRouter from "next";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import { Avatar } from "@material-ui/core";
 import getRecipentEmail from "../utils/getRecipentEmail";
@@ -18,12 +18,12 @@ function Chat({ id, users }) {
   const recipient = recipientSnapshot?.docs?.[0];
   /*  console.log(getRecipentEmail(users, user)) */
   const enterChat = () => {
-    router.push("/chat/id");
+    router.push(`/chat/${id}`);
   };
 
   return (
     <ThemeProvider theme={mainCustomTheme}>
-      <Container color="primary">
+      <Container color="primary" onClick={enterChat}>
         {recipient ? (
           <UserAvatar />
         ) : (
