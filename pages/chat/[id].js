@@ -2,12 +2,17 @@ import Head from "next/head";
 import styled from "styled-components";
 import Sidebar from "./../../components/Sidebar";
 import ChatScreen from "../../components/ChatScreen.js";
+import { auth, db } from "../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import getRecipentEmail from "./../../utils/getRecipentEmail";
 
-function Chat() {
+function Chat({ chat, messages }) {
+  const [user] = useAuthState(auth);
+
   return (
     <Container>
       <Head>
-        <title>TEST CHAT WINDOW</title>
+        <title>Chating with {getRecipentEmail(chat.users, user)}</title>
       </Head>
       <Sidebar />
       <ChatContainer>
@@ -18,14 +23,14 @@ function Chat() {
 }
 
 export default Chat;
-
+// all this magic will happen on the server before we even see the page
 export async function getServerSideProps(context) {
   //create refrence
   const ref = db.collection("chats").doc(context.query.id);
   //Prep the messages on the server
   const messagesRes = await ref
     .collection("messages")
-    .order("timestamp", "asc")
+    .orderBy("timestamp", "asc")
     .get();
 
   //map throug messages array
@@ -44,7 +49,14 @@ export async function getServerSideProps(context) {
     id: chatRes.id,
     ...chatRes.data(),
   };
+  console.log(chat, messages);
   //When we ssr server prepairs page before client goes into page
+  return {
+    props: {
+      messages: JSON.stringify(messages),
+      chat: chat,
+    },
+  };
 }
 
 const Container = styled.div`
