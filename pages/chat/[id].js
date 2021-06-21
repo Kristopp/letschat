@@ -16,7 +16,7 @@ function Chat({ chat, messages }) {
       </Head>
       <Sidebar />
       <ChatContainer>
-        <ChatScreen />
+        <ChatScreen chat={chat} messages={messages}/>
       </ChatContainer>
     </Container>
   );
@@ -29,27 +29,27 @@ export async function getServerSideProps(context) {
   const ref = db.collection("chats").doc(context.query.id);
   //Prep the messages on the server
   const messagesRes = await ref
-    .collection("messages")
-    .orderBy("timestamp", "asc")
-    .get();
-
+  .collection("messages")
+  .orderBy("timestamp", "asc")
+  .get();
+  
   //map throug messages array
   const messages = messagesRes.docs
-    .map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }))
-    .map((messages) => ({
-      messages,
-      timestamp: messages.timestamp.toDate().getTime(),
-    })); //when u send data from back to frond end u lose timestamp // datatype
+  .map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }))
+  .map((messages) => ({
+    messages,
+    timestamp: messages.timestamp.toDate().getTime(),
+  })); //when u send data from back to frond end u lose timestamp // datatype
+  console.log(messagesRes)
   //Prep chats
   const chatRes = await ref.get();
   const chat = {
     id: chatRes.id,
     ...chatRes.data(),
   };
-  console.log(chat, messages);
   //When we ssr server prepairs page before client goes into page
   return {
     props: {
