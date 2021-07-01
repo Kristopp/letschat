@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { auth, db } from "../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
@@ -5,11 +6,14 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 import { Avatar, IconButton } from "@material-ui/core";
 import { useRouter } from "next/router";
+import firebase from "firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
+import MicIcon from "@material-ui/icons/Mic";
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
+  const [input, setInput] = useState("");
   const router = useRouter();
   const [messagesSnapshot] = useCollection(
     db
@@ -51,12 +55,35 @@ function ChatScreen({ chat, messages }) {
       </Header>
       <MessageContainer>{showMessage()}</MessageContainer>
       <InputContainer>
-        <InsertEmoticonIcon />
-        <Input />
+        <InsertEmoticonIcon style={{ margin: "" }} />
+        <Input value={input} onChange={(e) => setInput(e.target.value)} />
+        <button
+          hidden
+          disabled={!input}
+          type="submit"
+          onClick={sendMessage}
+        ></button>
+        <MicIcon />
       </InputContainer>
     </Container>
   );
 }
+
+const sendMessage = (e) => {
+  e.preventDefault();
+
+  //Update the last seen
+
+  db.collection("chats").doc(router.query.id).collection("messages").add(
+    {
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      message: input,
+      user: user.email,
+      photoURL: user.photoURL,
+    },
+    { merge: true }
+  );
+};
 
 export default ChatScreen;
 
@@ -89,12 +116,16 @@ const HeaderInformation = styled.div`
 
 const HeaderIcons = styled.div``;
 
-const MessageContainer = styled.div``;
+const MessageContainer = styled.div`
+  padding: 30px;
+  background-color: #e5ded8;
+  min-height: 90vh;
+`;
 
 const InputContainer = styled.form`
   display: flex;
   align-items: center;
-  padding: 11px;
+  padding: 10px;
   position: sticky;
   bottom: 0;
   background-color: white;
@@ -104,8 +135,11 @@ const InputContainer = styled.form`
 const Input = styled.input`
   flex: 1;
   align-items: center;
-  padding: 11px;
+  padding: 10px;
   position: sticky;
+  margin-left: 5px;
   bottom: 0;
   background-color: white;
+  border: none;
+  background-color: #e5ded8;
 `;
