@@ -6,6 +6,7 @@ import AttachFileIcon from "@material-ui/icons/AttachFile";
 import { Avatar, IconButton } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { useCollection } from "react-firebase-hooks/firestore";
+import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
@@ -19,7 +20,18 @@ function ChatScreen({ chat, messages }) {
   );
 
   const showMessage = () => {
-    return;
+    if (messagesSnapshot) {
+      return messagesSnapshot.docs.map((messages) => (
+        <Message
+          key={message.id}
+          user={message.data().user}
+          message={{
+            ...message.data(),
+            timestamp: message.data().timestamp?.toDate.getTime(),
+          }}
+        />
+      ));
+    }
   };
 
   return (
@@ -37,7 +49,11 @@ function ChatScreen({ chat, messages }) {
           <MoreVertIcon />
         </IconButton>
       </Header>
-      <MessageContainer>{/* Show messages */}</MessageContainer>
+      <MessageContainer>{showMessage()}</MessageContainer>
+      <InputContainer>
+      <InsertEmoticonIcon />
+      <Input />
+      </InputContainer>
     </Container>
   );
 }
@@ -74,3 +90,7 @@ const HeaderInformation = styled.div`
 const HeaderIcons = styled.div``;
 
 const MessageContainer = styled.div``;
+
+const InputContainer = styled.div``;
+
+const Input = styled.input``;
