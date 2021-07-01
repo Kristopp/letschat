@@ -51,8 +51,8 @@ function ChatScreen({ chat, messages }) {
       </Header>
       <MessageContainer>{showMessage()}</MessageContainer>
       <InputContainer>
-      <InsertEmoticonIcon />
-      <Input />
+        <InsertEmoticonIcon />
+        <Input />
       </InputContainer>
     </Container>
   );
@@ -91,6 +91,21 @@ const HeaderIcons = styled.div``;
 
 const MessageContainer = styled.div``;
 
-const InputContainer = styled.div``;
+const InputContainer = styled.form`
+  display: flex;
+  align-items: center;
+  padding: 11px;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  z-index: 100;
+`;
 
-const Input = styled.input``;
+const Input = styled.input`
+  flex: 1;
+  align-items: center;
+  padding: 11px;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+`;
