@@ -10,6 +10,7 @@ import firebase from "firebase";
 import { useCollection } from "react-firebase-hooks/firestore";
 import InsertEmoticonIcon from "@material-ui/icons/InsertEmoticon";
 import MicIcon from "@material-ui/icons/Mic";
+import Message from "./Message";
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
@@ -25,17 +26,41 @@ function ChatScreen({ chat, messages }) {
 
   const showMessage = () => {
     if (messagesSnapshot) {
-      return messagesSnapshot.docs.map((messages) => (
+      return messagesSnapshot.docs.map((message) => (
         <Message
           key={message.id}
           user={message.data().user}
           message={{
             ...message.data(),
-            timestamp: message.data().timestamp?.toDate.getTime(),
+            timestamp: message.data().timestamp?.toDate().getTime(),
           }}
         />
       ));
     }
+  };
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+
+    //Update the last seen
+
+    db.collection("chats").doc(router.query.id).collection("messages").add(
+      {
+        lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    );
+
+    db.collection("chats")
+      .doc(router.query.id)
+      .collection("messages")
+      .add({
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        message: input,
+        user: user.email,
+        photoURL: user.photoURL,
+      });
+    setInput("");
   };
 
   return (
@@ -68,22 +93,6 @@ function ChatScreen({ chat, messages }) {
     </Container>
   );
 }
-
-const sendMessage = (e) => {
-  e.preventDefault();
-
-  //Update the last seen
-
-  db.collection("chats").doc(router.query.id).collection("messages").add(
-    {
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      message: input,
-      user: user.email,
-      photoURL: user.photoURL,
-    },
-    { merge: true }
-  );
-};
 
 export default ChatScreen;
 

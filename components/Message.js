@@ -1,9 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-
-function Message({user, message}) {
-return <Container>{{/* message object */}}</Container>;
+function Message({ user, message }) {
+  return <Container>{message.message}</Container>;
 }
 
 export default Message;
